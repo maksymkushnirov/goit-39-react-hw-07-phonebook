@@ -1,14 +1,15 @@
 import PropTypes from 'prop-types';
 import styles from './ContactList.module.css';
 import { useSelector } from 'react-redux';
-import { getFilter } from 'redux/Selectors.js';
-import { useDeleteContactMutation, useFetchContactsQuery } from 'redux/apiSlice';
+import {
+  useDeleteContactMutation,
+  useFetchContactsQuery,
+} from 'redux/apiSlice';
 
 const ContactList = () => {
   const { data = [] } = useFetchContactsQuery();
-  const [deleteContact] = useDeleteContactMutation()
-  const { filter } = useSelector(state => getFilter(state));
-  
+  const [deleteContact] = useDeleteContactMutation();
+  const { filter } = useSelector(state => state.filter);
 
   const getFilterContacts = () => {
     const normalizedFilter = filter.toLowerCase();
@@ -16,19 +17,14 @@ const ContactList = () => {
       contacts.name.toLowerCase().includes(normalizedFilter)
     );
   };
-  
-  const filterContacts = getFilterContacts();
 
   return (
     <div className={styles.contactItem}>
-      {filterContacts.map(({ id, number, name }) => {
+      {getFilterContacts().map(({ id, phone, name }) => {
         return (
           <li key={id}>
-            {name}: {number}
-            <button
-              className={styles.button}
-              onClick={() => (deleteContact(id))}
-            >
+            {name}: {phone}
+            <button className={styles.button} onClick={() => deleteContact(id)}>
               Delete
             </button>
           </li>

@@ -1,3 +1,6 @@
+# production
+/build
+
 #Junk
 .DS_Store
 .vscode/
